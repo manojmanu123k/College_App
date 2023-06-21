@@ -94,7 +94,7 @@ class CourseApi extends CourseApiGenerated {
   }
 }
 
-
+export default CourseApi;
 
 // Separate files for each API class (ExamApi, StudentApi, TeacherApi)
 // API utility file for common API tasks

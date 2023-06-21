@@ -284,6 +284,6 @@ const teacherApi = new TeacherApi(httpClient);
 
 export { examApi, courseApi, studentApi, teacherApi };
 
-
+export default ExamApi;
 
 export default ExamApi;
