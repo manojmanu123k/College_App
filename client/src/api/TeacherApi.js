@@ -1,10 +1,7 @@
-import config from './config';
-import CourseModel from "../models/Test_db/CourseModel"; // Update the import path
-import StudentModel from "../models/Test_db/StudentModel"; // Update the import path
-import TeacherModel from "../models/Test_db/TeacherModel"; // Update the import path
-
-
-
+import properties from "../config/properties";
+import CourseModel from '../models/Test_db/CourseModel';
+import StudentModel from '../models/Test_db/StudentModel';
+import TeacherModel from '../models/Test_db/TeacherModel';
 
 class TeacherApi {
   // Get Teacher List
@@ -31,7 +28,7 @@ class TeacherApi {
   static async getTeacherCourses(teacherId) {
     try {
       const teacher = await TeacherModel.findById(teacherId)
-        .populate("_courses")
+        .populate('_courses')
         .exec();
       return teacher._courses;
     } catch (error) {
@@ -43,7 +40,7 @@ class TeacherApi {
   static async getTeacherStudents(teacherId) {
     try {
       const teacher = await TeacherModel.findById(teacherId)
-        .populate("_students")
+        .populate('_students')
         .exec();
       return teacher._students;
     } catch (error) {
@@ -53,19 +50,23 @@ class TeacherApi {
 
   // Add Teacher
   static async addTeacher(teacherData) {
-    const teacher = new TeacherModel(teacherData);
-    return teacher.save();
+    try {
+      const teacher = new TeacherModel(teacherData);
+      return teacher.save();
+    } catch (error) {
+      throw error;
+    }
   }
 
   // Update Teacher
   static async updateTeacher(teacherId, teacherData) {
     try {
       const response = await fetch(`${config.apiUrl}/teachers/${teacherId}`, {
-        method: "PUT",
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json"
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(teacherData)
+        body: JSON.stringify(teacherData),
       });
       return response.json();
     } catch (error) {
@@ -77,7 +78,7 @@ class TeacherApi {
   static async deleteTeacher(teacherId) {
     try {
       const response = await fetch(`${config.apiUrl}/teachers/${teacherId}`, {
-        method: "DELETE"
+        method: 'DELETE',
       });
       return response.json();
     } catch (error) {
@@ -87,11 +88,3 @@ class TeacherApi {
 }
 
 export default TeacherApi;
-
-// config.js
-const config = {
-  apiUrl: "http://localhost:3000/api"
-};
-
-export default config;
-

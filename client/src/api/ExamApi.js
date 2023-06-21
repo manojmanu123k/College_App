@@ -1,16 +1,16 @@
 import axios from 'axios';
-import CourseApi from "./CourseApi";
-import StudentApi from "./StudentApi";
-import TeacherApi from "./TeacherApi";
-import CourseModel from "../models/Test_db/CourseModel"; // Update the import path
-import StudentModel from "../models/Test_db/StudentModel"; // Update the import path
-import TeacherModel from "../models/Test_db/TeacherModel"; // Update the import path
-
+import CourseApi from './CourseApi';
+import StudentApi from './StudentApi';
+import TeacherApi from './TeacherApi';
+import properties from "../config/properties";
+import CourseModel from '../models/Test_db/CourseModel'; // Update the import path
+import StudentModel from '../models/Test_db/StudentModel'; // Update the import path
+import TeacherModel from '../models/Test_db/TeacherModel'; // Update the import path
 
 class ExamApi {
   constructor(httpClient) {
     this.httpClient = httpClient;
-    this.apiUrl = process.env.API_URL || "http://localhost:3000/api";
+    this.apiUrl = process.env.API_URL || 'http://localhost:3000/api';
   }
 
   async getExamList() {
@@ -19,9 +19,9 @@ class ExamApi {
       const exams = response.data;
 
       const [courses, students, teachers] = await Promise.all([
-        this.getCourseList(),
-        this.getStudentList(),
-        this.getTeacherList()
+        CourseApi.getCourseList(),
+        StudentApi.getStudentList(),
+        TeacherApi.getTeacherList(),
       ]);
 
       exams.forEach(exam => {
@@ -42,9 +42,9 @@ class ExamApi {
       const exam = response.data;
 
       const [course, students, teachers] = await Promise.all([
-        this.getCourseDetails(exam.courseId),
+        CourseApi.getCourseDetails(exam.courseId),
         this.getStudentsByExam(examId),
-        this.getTeachersByExam(examId)
+        this.getTeachersByExam(examId),
       ]);
 
       exam.course = course;
@@ -84,42 +84,6 @@ class ExamApi {
     }
   }
 
-  async getCourseList() {
-    try {
-      const response = await this.httpClient.get(`${this.apiUrl}/courses`);
-      return response.data;
-    } catch (error) {
-      this.handleError(error);
-    }
-  }
-
-  async getStudentList() {
-    try {
-      const response = await this.httpClient.get(`${this.apiUrl}/students`);
-      return response.data;
-    } catch (error) {
-      this.handleError(error);
-    }
-  }
-
-  async getTeacherList() {
-    try {
-      const response = await this.httpClient.get(`${this.apiUrl}/teachers`);
-      return response.data;
-    } catch (error) {
-      this.handleError(error);
-    }
-  }
-
-  async getCourseDetails(courseId) {
-    try {
-      const response = await this.httpClient.get(`${this.apiUrl}/courses/${courseId}`);
-      return response.data;
-    } catch (error) {
-      this.handleError(error);
-    }
-  }
-
   async getStudentsByExam(examId) {
     try {
       const response = await this.httpClient.get(`${this.apiUrl}/exams/${examId}/students`);
@@ -142,148 +106,5 @@ class ExamApi {
     throw error;
   }
 }
-
-class HttpClient {
-  constructor() {
-    this.client = axios.create();
-  }
-
-  async get(url) {
-    try {
-      const response = await this.client.get(url);
-      return response.data;
-    } catch (error) {
-      this.handleError(error);
-    }
-  }
-
-  async post(url, data) {
-    try {
-      const response = await this.client.post(url, data);
-      return response.data;
-    } catch (error) {
-      this.handleError(error);
-    }
-  }
-
-  async put(url, data) {
-    try {
-      const response = await this.client.put(url, data);
-      return response.data;
-    } catch (error) {
-      this.handleError(error);
-    }
-  }
-
-  async delete(url) {
-    try {
-      const response = await this.client.delete(url);
-      return response.data;
-    } catch (error) {
-      this.handleError(error);
-    }
-  }
-
-  handleError(error) {
-    throw error;
-  }
-}
-
-class CourseApi {
-  constructor(httpClient) {
-    this.httpClient = httpClient;
-    this.apiUrl = process.env.API_URL || "http://localhost:3000/api";
-  }
-
-  async getCourseList() {
-    try {
-      const response = await this.httpClient.get(`${this.apiUrl}/courses`);
-      return response.data;
-    } catch (error) {
-      this.handleError(error);
-    }
-  }
-
-  async getCourseDetails(courseId) {
-    try {
-      const response = await this.httpClient.get(`${this.apiUrl}/courses/${courseId}`);
-      return response.data;
-    } catch (error) {
-      this.handleError(error);
-    }
-  }
-
-  handleError(error) {
-    throw error;
-  }
-}
-
-class StudentApi {
-  constructor(httpClient) {
-    this.httpClient = httpClient;
-    this.apiUrl = process.env.API_URL || "http://localhost:3000/api";
-  }
-
-  async getStudentList() {
-    try {
-      const response = await this.httpClient.get(`${this.apiUrl}/students`);
-      return response.data;
-    } catch (error) {
-      this.handleError(error);
-    }
-  }
-
-  async getStudentsByExam(examId) {
-    try {
-      const response = await this.httpClient.get(`${this.apiUrl}/exams/${examId}/students`);
-      return response.data;
-    } catch (error) {
-      this.handleError(error);
-    }
-  }
-
-  handleError(error) {
-    throw error;
-  }
-}
-
-class TeacherApi {
-  constructor(httpClient) {
-    this.httpClient = httpClient;
-    this.apiUrl = process.env.API_URL || "http://localhost:3000/api";
-  }
-
-  async getTeacherList() {
-    try {
-      const response = await this.httpClient.get(`${this.apiUrl}/teachers`);
-      return response.data;
-    } catch (error) {
-      this.handleError(error);
-    }
-  }
-
-  async getTeachersByExam(examId) {
-    try {
-      const response = await this.httpClient.get(`${this.apiUrl}/exams/${examId}/teachers`);
-      return response.data;
-    } catch (error) {
-      this.handleError(error);
-    }
-  }
-
-  handleError(error) {
-    throw error;
-  }
-}
-
-const httpClient = new HttpClient();
-const examApi = new ExamApi(httpClient);
-const courseApi = new CourseApi(httpClient);
-const studentApi = new StudentApi(httpClient);
-const teacherApi = new TeacherApi(httpClient);
-
-export { examApi, courseApi, studentApi, teacherApi };
-
-
 
 export default ExamApi;

@@ -1,15 +1,16 @@
-import UserApiGenerated from "./generated/UserApiGenerated";
-import axios from "axios";
-import { properties } from "../config/properties";
+import axios from 'axios';
+import properties from "../config/properties";
+import CourseModel from '../models/Test_db/CourseModel';
+import StudentModel from '../models/Test_db/StudentModel';
+import TeacherModel from '../models/Test_db/TeacherModel';
+import UserModel from '../models/Test_db/UserModel';
 
-class UserApi extends UserApiGenerated {
+class UserApi {
   // Get User List
   static getUserList() {
-    return fetch("http://localhost:3000/api/users")
-      .then(response => {
-        return response.json();
-      })
-      .catch(error => {
+    return fetch(`${config.apiUrl}/users`)
+      .then((response) => response.json())
+      .catch((error) => {
         throw error;
       });
   }
@@ -17,26 +18,20 @@ class UserApi extends UserApiGenerated {
   // Login
   static login(username, password) {
     return axios
-      .post(properties.endpoint + "/login", {
+      .post(`${config.apiUrl}/login`, {
         username: username,
-        password: password
+        password: password,
       })
-      .then(response => {
-        return response.data;
-      })
-      .catch(error => {
-        return error;
-      });
+      .then((response) => response.data)
+      .catch((error) => error);
   }
 
   // Verify Token
   static verifyToken(token) {
     return axios
-      .post(properties.endpoint + "/verifyToken", { token: token })
-      .then(response => {
-        return response.data;
-      })
-      .catch(error => {
+      .post(`${config.apiUrl}/verifyToken`, { token: token })
+      .then((response) => response.data)
+      .catch((error) => {
         throw error;
       });
   }
@@ -44,14 +39,12 @@ class UserApi extends UserApiGenerated {
   // Change Password
   static changePassword(passwordNew, passwordOld) {
     return axios
-      .post(properties.endpoint + "/changePassword", {
+      .post(`${config.apiUrl}/changePassword`, {
         passwordNew: passwordNew,
-        passwordOld: passwordOld
+        passwordOld: passwordOld,
       })
-      .then(response => {
-        return response.data;
-      })
-      .catch(error => {
+      .then((response) => response.data)
+      .catch((error) => {
         throw error;
       });
   }
@@ -59,14 +52,12 @@ class UserApi extends UserApiGenerated {
   // Change Password (Admin)
   static changePasswordAdmin(id, passwordAdmin, passwordNew) {
     return axios
-      .post(UserApiGenerated.contextUrl + "/" + id + "/changePassword", {
+      .post(`${UserModel.contextUrl}/${id}/changePassword`, {
         passwordNew: passwordNew,
-        passwordAdmin: passwordAdmin
+        passwordAdmin: passwordAdmin,
       })
-      .then(response => {
-        return response.data;
-      })
-      .catch(error => {
+      .then((response) => response.data)
+      .catch((error) => {
         throw error;
       });
   }

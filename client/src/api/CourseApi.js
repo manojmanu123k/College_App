@@ -1,17 +1,13 @@
 import axios from 'axios';
-import ExamApi from "./api/ExamApi";
-import StudentApi from "./api/StudentApi";
-import TeacherApi from "./api/TeacherApi";
-import CourseModel from "../models/Test_db/CourseModel"; // Update the import path
-import StudentModel from "../models/Test_db/StudentModel"; // Update the import path
-import TeacherModel from "../models/Test_db/TeacherModel"; // Update the import path
-
-
+import CourseModel from "../models/Test_db/CourseModel";
+import StudentModel from "../models/Test_db/StudentModel";
+import TeacherModel from "../models/Test_db/TeacherModel";
+import properties from "../config/properties";
 
 class CourseApi extends CourseApiGenerated {
   static async getCourseExams(courseId) {
     try {
-      const exams = await ExamApi.getExamList();
+      const exams = await ExamApi.getExamList(); // Remove this line if ExamApi is not used
       return exams.filter(exam => exam.courseId === courseId);
     } catch (error) {
       throw error;
@@ -20,7 +16,7 @@ class CourseApi extends CourseApiGenerated {
 
   static async getCourseStudents(courseId) {
     try {
-      const students = await StudentApi.getStudentList();
+      const students = await StudentApi.getStudentList(); // Remove this line if StudentApi is not used
       return students.filter(student => student.courseId === courseId);
     } catch (error) {
       throw error;
@@ -29,7 +25,7 @@ class CourseApi extends CourseApiGenerated {
 
   static async getCourseTeachers(courseId) {
     try {
-      const teachers = await TeacherApi.getTeacherList();
+      const teachers = await TeacherApi.getTeacherList(); // Remove this line if TeacherApi is not used
       return teachers.filter(teacher => teacher.courseId === courseId);
     } catch (error) {
       throw error;
@@ -93,11 +89,5 @@ class CourseApi extends CourseApiGenerated {
     }
   }
 }
-
-
-
-// Separate files for each API class (ExamApi, StudentApi, TeacherApi)
-// API utility file for common API tasks
-// Environment variables for API base URL can be set using a .env file or a configuration file.
 
 export default CourseApi;

@@ -1,11 +1,10 @@
-import axios from "axios";
-import { properties } from "../config/properties";
-import CourseApi from "./CourseApi";
-import ExamApi from "./ExamApi";
-import CourseModel from "../models/Test_db/CourseModel"; // Update the import path
-import StudentModel from "../models/Test_db/StudentModel"; // Update the import path
-import TeacherModel from "../models/Test_db/TeacherModel"; // Update the import path
-
+import axios from 'axios';
+import CourseApi from './CourseApi';
+import ExamApi from './ExamApi';
+import CourseModel from '../models/Test_db/CourseModel'; // Update the import path
+import StudentModel from '../models/Test_db/StudentModel'; // Update the import path
+import TeacherModel from '../models/Test_db/TeacherModel'; // Update the import path
+import properties from "../config/properties";
 
 class StudentApi {
   constructor(endpoint) {
@@ -30,8 +29,9 @@ class StudentApi {
     }
   }
 
-  async getStudentCourses(studentId, courseApi) {
+  async getStudentCourses(studentId) {
     try {
+      const courseApi = new CourseApi(this.endpoint);
       const courses = await courseApi.getCourseList();
       return courses.filter(course => course.students.includes(studentId));
     } catch (error) {
@@ -39,8 +39,9 @@ class StudentApi {
     }
   }
 
-  async getStudentExams(studentId, examApi) {
+  async getStudentExams(studentId) {
     try {
+      const examApi = new ExamApi(this.endpoint);
       const exams = await examApi.getExamList();
       return exams.filter(exam => exam.students.includes(studentId));
     } catch (error) {
@@ -85,5 +86,4 @@ function constructApiUrl(endpoint, path) {
 }
 
 export { StudentApi, constructApiUrl };
-
 export default StudentApi;
