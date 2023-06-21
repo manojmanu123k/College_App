@@ -1,180 +1,244 @@
-// Dependencies
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import DialogDelete from "../components/DialogDelete";
-
-// Redux
+import Utils from "../utils/utils";
+import DialogChangePwdAdmin from "../components/DialogChangePwdAdmin";
+import crypto from "js-sha3";
 import PropTypes from "prop-types";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Fab from "@material-ui/core/Fab";
+import Grid from "@material-ui/core/Grid";
+import Add from "@material-ui/icons/Add";
+import Delete from "@material-ui/icons/Delete";
 import UserActions from "../redux/actions/UserActions";
 
-// Material UI
-import Button from "@material-ui/core/Button";
-// import Table from "@material-ui/core/Table";
-// import TableBody from "@material-ui/core/TableBody";
-// import TableCell from "@material-ui/core/TableCell";
-// import TableHead from "@material-ui/core/TableHead";
-// import TableRow from "@material-ui/core/TableRow";
-
-// Table
-import EnhancedTable from "../components/EnhancedTable";
-
-/** APIs
-
-* UserService.delete
-*	@description CRUD ACTION delete
-*	@param ObjectId id - Id
-*
-* UserService.list
-*	@description CRUD ACTION list
-*
-
-**/
-
-class UserList extends Component {
-  // Init component
+class UserEdit extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      openDialogDelete: false
+      user: {},
+      roles: {},
+      openChangePwd: false
     };
   }
 
-  // Load data on start
-  componentWillMount() {
-    this.props.actions.loadUserList();
+  componentDidMount() {
+    if (this.props.match.params.id !== "new") {
+      this.props.actionsUser.getUser(this.props.match.params.id);
+    }
   }
 
-  // Delete data
-  delete(id) {
-    this.setState({ openDialogDelete: true, idDelete: id });
+  componentWillReceiveProps(props) {
+    this.setState({ user: props.user });
   }
 
-  closeDialogDelete() {
-    this.setState({ openDialogDelete: false, idDelete: null });
+  openDialogChangePwd() {
+    this.setState({ openChangePwd: true });
   }
 
-  confirmDialogDelete(id) {
-    this.props.actions.deleteUser(this.state.idDelete).then(data => {
-      this.props.actions.loadUserList();
-      this.setState({ openDialogDelete: false, idDelete: null });
+  closeDialogChangePwd() {
+    this.setState({ openChangePwd: false });
+  }
+
+  confirmDialogChangePwd(passwordNew, passwordOld) {
+    this.setState({ openChangePwd: false });
+  }
+
+  save(event) {
+    event.preventDefault();
+    if (this.state.user._id) {
+      this.props.actionsUser.updateUser(this.state.user).then(() => {
+        this.props.history.push("/users/");
+      });
+    } else {
+      const user = { ...this.state.user };
+      user.password = crypto.sha3_512(this.state.user.password);
+      this.props.actionsUser.createUser(user).then(() => {
+        this.props.history.push("/users/");
+      });
+    }
+  }
+
+  changeRole(i, event) {
+    const value = event.target.value;
+    this.setState(prevState => {
+      const user = { ...prevState.user };
+      user.roles[i] = value;
+      return { user };
     });
   }
 
-  // Show content
-  render() {
-    const columns = [
-      {
-        id: "username",
-        type: "string",
-        label: "Username"
-      },
-      {
-        id: "name",
-        type: "string",
-        label: "Name"
-      },
-      {
-        id: "surname",
-        type: "string",
-        label: "Surname"
-      },
-      {
-        id: "mail",
-        type: "string",
-        label: "Mail"
-      },
-      {
-        id: "roles",
-        type: "string",
-        label: "Roles"
+  addRole(event) {
+    this.setState(prevState => {
+      const roles = { ...prevState.roles };
+      if (!prevState.user.roles) {
+        prevState.user.roles = [];
       }
-    ];
-    const link = "/users/";
+      prevState.user.roles.push(prevState.roles.newRole);
+      roles.newRole = "";
+      return { roles };
+    });
+  }
 
+  removeRole(i, event) {
+    this.setState(prevState => {
+      const user = { ...prevState.user };
+      user.roles.splice(i, 1);
+      return { user };
+    });
+  }
+
+  render() {
     return (
       <div>
-        <h1>User List</h1>
+        <h1>User Edit</h1>
+        <form className="myForm" onSubmit={this.save.bind(this)}>
+          <TextField
+            id="username"
+            label="Username"
+            value={this.state.user.username || ""}
+            onChange={Utils.handleChange.bind(this, "user")}
+            margin="normal"
+            fullWidth
+            required
+            disabled={this.state.user._id}
+            error={!this.state.user.username || this.state.user.username === ""}
+          />
 
-        <EnhancedTable
-          data={this.props.list}
-          columns={columns}
-          link={link}
-          onDelete={this.delete.bind(this)}
-        />
+          {!this.state.user._id && (
+            <TextField
+              id="password"
+              label="Password"
+              value={this.state.user.password || ""}
+              onChange={Utils.handleChange.bind(this, "user")}
+              margin="normal"
+              fullWidth
+              required
+              type="password"
+              error={!this.state.user.password || this.state.user.password === ""}
+            />
+          )}
 
-        <DialogDelete
-          open={this.state.openDialogDelete}
-          onClose={this.closeDialogDelete.bind(this)}
-          onConfirm={this.confirmDialogDelete.bind(this)}
-        />
+          <TextField
+            id="name"
+            label="Name"
+            value={this.state.user.name || ""}
+            onChange={Utils.handleChange.bind(this, "user")}
+            margin="normal"
+            fullWidth
+          />
 
-        {/*
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell align="right">Mail</TableCell>
-              <TableCell align="right">Name</TableCell>
-              <TableCell align="right">Password</TableCell>
-              <TableCell align="right">Roles</TableCell>
-              <TableCell align="right">Surname</TableCell>
-              <TableCell align="right">Username</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {this.props.list.map(row => (
-              <TableRow key={row._id}>
-                <TableCell component="th" scope="row">
-                  <Link to={"/users/" + row._id} key={row._id}>
-                    {row._id}
-                  </Link>
-                </TableCell>
-                <TableCell align="right">{ row.mail }</TableCell>
-                <TableCell align="right">{ row.name }</TableCell>
-                <TableCell align="right">{ row.password }</TableCell>
-                <TableCell align="right">{ row.roles }</TableCell>
-                <TableCell align="right">{ row.surname }</TableCell>
-                <TableCell align="right">{ row.username }</TableCell>
-              </TableRow>
+          <TextField
+            id="surname"
+            label="Surname"
+            value={this.state.user.surname || ""}
+            onChange={Utils.handleChange.bind(this, "user")}
+            margin="normal"
+            fullWidth
+          />
+
+          <TextField
+            id="mail"
+            label="Mail"
+            value={this.state.user.mail || ""}
+            onChange={Utils.handleChange.bind(this, "user")}
+            margin="normal"
+            fullWidth
+          />
+
+          <h2>Roles</h2>
+          <Grid container spacing={8} alignItems="flex-end">
+            <Grid item xs={10}>
+              <TextField
+                id="newRole"
+                label="Add a new role..."
+                value={this.state.roles.newRole || ""}
+                onChange={Utils.handleChange.bind(this, "roles")}
+                margin="normal"
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={2}>
+              <Fab
+                onClick={this.addRole.bind(this)}
+                size="small"
+                color="primary"
+              >
+                <Add />
+              </Fab>
+            </Grid>
+          </Grid>
+
+          {this.state.user.roles &&
+            this.state.user.roles.map((role, i) => (
+              <Grid container spacing={8} alignItems="flex-end" key={i}>
+                <Grid item xs={10}>
+                  <TextField
+                    id={`roles[${i}]`}
+                    label="Add a new role..."
+                    value={role}
+                    onChange={this.changeRole.bind(this, i)}
+                    margin="normal"
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <Fab
+                    size="small"
+                    color="secondary"
+                    onClick={this.removeRole.bind(this, i)}
+                  >
+                    <Delete />
+                  </Fab>
+                </Grid>
+              </Grid>
             ))}
-          </TableBody>
-        </Table>
-        */}
 
-        <div className="footer-card">
-          <Link to="/users/new">
-            <Button variant="contained" color="primary">
-              Add
+          <div className="footer-card">
+            <Button
+              onClick={this.openDialogChangePwd.bind(this)}
+              variant="contained"
+              color="secondary"
+              style={{ float: "left" }}
+            >
+              Change Password
             </Button>
-          </Link>
-        </div>
+            <DialogChangePwdAdmin
+              idUser={this.state.user._id}
+              open={this.state.openChangePwd}
+              onClose={this.closeDialogChangePwd.bind(this)}
+              onConfirm={this.confirmDialogChangePwd.bind(this)}
+            />
+
+            <Link to="/users/">Back to list</Link>
+
+            <Button type="submit" variant="contained" color="primary">
+              Save
+            </Button>
+          </div>
+        </form>
       </div>
     );
   }
 }
 
-// Store actions
-const mapDispatchToProps = function(dispatch) {
+const mapDispatchToProps = dispatch => {
   return {
-    actions: bindActionCreators(UserActions, dispatch)
+    actionsUser: bindActionCreators(UserActions, dispatch)
   };
 };
 
-// Validate types
-UserList.propTypes = {
-  actions: PropTypes.object.isRequired
+UserEdit.propTypes = {
+  actionsUser: PropTypes.object.isRequired,
+  user: PropTypes.object
 };
 
-// Get props from state
-function mapStateToProps(state, ownProps) {
+const mapStateToProps = (state, ownProps) => {
   return {
-    list: state.UserListReducer.listUser
+    user: state.UserReducer.user
   };
-}
+};
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(UserList);
+export default connect(mapStateToProps, mapDispatchToProps)(UserEdit);
