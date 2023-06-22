@@ -1,11 +1,7 @@
 import axios from 'axios';
-import ExamApi from "./ExamApi"; // Update the import statement for ExamApi
-import StudentApi from "./StudentApi"; // Update the import statement for StudentApi
-import TeacherApi from "./TeacherApi"; // Update the import statement for TeacherApi
-import CourseApiGenerated from "./generated/CourseApiGenerated";
-
-// Rest of the code remains the same
-
+import { ExamApi, StudentApi, TeacherApi } from "../api"; // Import ExamApi, StudentApi, and TeacherApi
+//import properties from "../config/properties";
+import CourseApiGenerated from "./generated/CourseApiGenerated"; // Import the generated CourseApi class
 
 class CourseApi extends CourseApiGenerated {
   static async getCourseExams(courseId) {
