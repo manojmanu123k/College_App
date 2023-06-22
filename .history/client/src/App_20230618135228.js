@@ -1,7 +1,8 @@
+// Dependencies
 import React, { Component, Fragment } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { MuiPickersUtilsProvider } from "material-ui-pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import SecurityService from "./security/SecurityService";
 
@@ -14,16 +15,15 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
 class App extends Component {
+
   // Init component
   constructor(props) {
     super(props);
-    this.state = {
-      tokenChecked: false
-    };
+    this.state = {};
   }
 
   // Check JWT token
-  async componentDidMount() {
+  async componentWillMount() {
     await SecurityService.verifyToken();
     this.setState({ tokenChecked: true });
   }

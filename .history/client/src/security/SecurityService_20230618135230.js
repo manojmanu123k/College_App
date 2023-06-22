@@ -12,11 +12,9 @@ export default class SecurityService {
       );
 
       if (user && user.token) {
-        axios.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${user.token}`;
+        axios.defaults.headers.common["authorization"] = `Bearer ${user.token}`;
       } else {
-        delete axios.defaults.headers.common["Authorization"];
+        delete axios.defaults.headers.common["authorization"];
       }
     } catch (e) {
       console.error("User not valid");
@@ -59,7 +57,7 @@ export default class SecurityService {
   }
 
   /**
-   * Check if role array is authorized
+   * Check if role array is auth
    */
   static isAuth(roles) {
     const user = SecurityService.getUser();
@@ -98,7 +96,7 @@ export default class SecurityService {
   }
 
   /**
-   * Update user
+   * Get update user
    */
   static updateUser(user) {
     let userLocal = JSON.parse(localStorage.getItem("user"));

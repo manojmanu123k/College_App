@@ -1,18 +1,22 @@
+
+ 
+// Dependencies
 import axios from "axios";
 import { properties } from "../../config/properties";
 
 class StudentApiGenerated {
+
   static contextUrl = properties.endpoint + "/student";
 
   // CRUD METHODS
 
   /**
-   * createStudent
-   * @description CRUD ACTION create
-   */
+  * studentService.create
+  *   @description CRUD ACTION create
+  *
+  */
   static createStudent(student) {
-    return axios
-      .post(StudentApiGenerated.contextUrl, student)
+    return axios.post(StudentApiGenerated.contextUrl, student )
       .then(response => {
         return response.data;
       })
@@ -22,13 +26,13 @@ class StudentApiGenerated {
   }
 
   /**
-   * deleteStudent
-   * @description CRUD ACTION delete
-   * @param {ObjectId} id - Id
-   */
+  * studentService.delete
+  *   @description CRUD ACTION delete
+  *   @param ObjectId id Id
+  *
+  */
   static deleteStudent(id) {
-    return axios
-      .delete(StudentApiGenerated.contextUrl + "/" + id)
+    return axios.delete(StudentApiGenerated.contextUrl + "/" + id)
       .then(response => {
         return response.data;
       })
@@ -38,13 +42,13 @@ class StudentApiGenerated {
   }
 
   /**
-   * findBy_courses
-   * @description CRUD ACTION findBy_courses
-   * @param {ObjectId} id - Id of model to search for
-   */
+  * studentService.findBy_courses
+  *   @description CRUD ACTION findBy_courses
+  *   @param Objectid key Id of model to search for
+  *
+  */
   static findBy_courses(id) {
-    return axios
-      .get(StudentApiGenerated.contextUrl + "/findBy_courses/" + id)
+    return axios.get(StudentApiGenerated.contextUrl + "/findBy_courses/" + id )
       .then(response => {
         return response.data;
       })
@@ -54,13 +58,13 @@ class StudentApiGenerated {
   }
 
   /**
-   * getOneStudent
-   * @description CRUD ACTION get
-   * @param {ObjectId} id - Id resource
-   */
+  * studentService.get
+  *   @description CRUD ACTION get
+  *   @param ObjectId id Id resource
+  *
+  */
   static getOneStudent(id) {
-    return axios
-      .get(StudentApiGenerated.contextUrl + "/" + id)
+    return axios.get(StudentApiGenerated.contextUrl + "/" + id)
       .then(response => {
         return response.data;
       })
@@ -70,12 +74,12 @@ class StudentApiGenerated {
   }
 
   /**
-   * getStudentList
-   * @description CRUD ACTION list
-   */
+  * studentService.list
+  *   @description CRUD ACTION list
+  *
+  */
   static getStudentList() {
-    return axios
-      .get(StudentApiGenerated.contextUrl)
+    return axios.get(StudentApiGenerated.contextUrl)
       .then(response => {
         return response.data;
       })
@@ -85,13 +89,13 @@ class StudentApiGenerated {
   }
 
   /**
-   * saveStudent
-   * @description CRUD ACTION update
-   * @param {ObjectId} id - Id
-   */
+  * studentService.update
+  *   @description CRUD ACTION update
+  *   @param ObjectId id Id
+  *
+  */
   static saveStudent(student) {
-    return axios
-      .post(StudentApiGenerated.contextUrl + "/" + student._id, student)
+    return axios.post(StudentApiGenerated.contextUrl + "/" + student._id, student )
       .then(response => {
         return response.data;
       })
@@ -100,7 +104,9 @@ class StudentApiGenerated {
       });
   }
 
-  // Custom APIs
+
+
+    // Custom APIs
 }
 
 export default StudentApiGenerated;

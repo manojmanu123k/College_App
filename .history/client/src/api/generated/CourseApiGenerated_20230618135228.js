@@ -1,18 +1,22 @@
+
+ 
+// Dependencies
 import axios from "axios";
-import properties from "../../config/properties";
+import { properties } from "../../config/properties";
 
 class CourseApiGenerated {
+
   static contextUrl = properties.endpoint + "/course";
 
   // CRUD METHODS
 
   /**
-   * createCourse
-   * @description CRUD ACTION create
-   */
+  * courseService.create
+  *   @description CRUD ACTION create
+  *
+  */
   static createCourse(course) {
-    return axios
-      .post(CourseApiGenerated.contextUrl, course)
+    return axios.post(CourseApiGenerated.contextUrl, course )
       .then(response => {
         return response.data;
       })
@@ -22,13 +26,13 @@ class CourseApiGenerated {
   }
 
   /**
-   * deleteCourse
-   * @description CRUD ACTION delete
-   * @param {ObjectId} id - Id
-   */
+  * courseService.delete
+  *   @description CRUD ACTION delete
+  *   @param ObjectId id Id
+  *
+  */
   static deleteCourse(id) {
-    return axios
-      .delete(CourseApiGenerated.contextUrl + "/" + id)
+    return axios.delete(CourseApiGenerated.contextUrl + "/" + id)
       .then(response => {
         return response.data;
       })
@@ -38,13 +42,13 @@ class CourseApiGenerated {
   }
 
   /**
-   * getOneCourse
-   * @description CRUD ACTION get
-   * @param {ObjectId} id - Id resource
-   */
+  * courseService.get
+  *   @description CRUD ACTION get
+  *   @param ObjectId id Id resource
+  *
+  */
   static getOneCourse(id) {
-    return axios
-      .get(CourseApiGenerated.contextUrl + "/" + id)
+    return axios.get(CourseApiGenerated.contextUrl + "/" + id)
       .then(response => {
         return response.data;
       })
@@ -54,12 +58,12 @@ class CourseApiGenerated {
   }
 
   /**
-   * getCourseList
-   * @description CRUD ACTION list
-   */
+  * courseService.list
+  *   @description CRUD ACTION list
+  *
+  */
   static getCourseList() {
-    return axios
-      .get(CourseApiGenerated.contextUrl)
+    return axios.get(CourseApiGenerated.contextUrl)
       .then(response => {
         return response.data;
       })
@@ -69,13 +73,13 @@ class CourseApiGenerated {
   }
 
   /**
-   * saveCourse
-   * @description CRUD ACTION update
-   * @param {ObjectId} id - Id
-   */
+  * courseService.update
+  *   @description CRUD ACTION update
+  *   @param ObjectId id Id
+  *
+  */
   static saveCourse(course) {
-    return axios
-      .post(CourseApiGenerated.contextUrl + "/" + course._id, course)
+    return axios.post(CourseApiGenerated.contextUrl + "/" + course._id, course )
       .then(response => {
         return response.data;
       })
@@ -84,7 +88,9 @@ class CourseApiGenerated {
       });
   }
 
-  // Custom APIs
+
+
+    // Custom APIs
 }
 
 export default CourseApiGenerated;
