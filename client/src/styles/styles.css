@@ -1,15 +1,14 @@
 body {
   background-color: #ddd;
-  margin: 0px;
+  margin: 0;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
-  body .main-cointainer {
-    padding: 20px;
-    margin: 20px;
-    margin-bottom: 50px; }
+
+.main-container {
+  padding: 20px;
+  margin: 20px;
+  margin-bottom: 50px; }
 
 * {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box; }
 
 .white {
